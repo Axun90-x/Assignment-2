@@ -1,0 +1,81 @@
+#include <stdio.h>
+
+#define NUM_ACCOUNTS 3
+
+typedef struct {
+    float balance;
+} BankAccount;
+
+void deposit(BankAccount *account, float amount) {
+    if (amount > 0) {
+        account->balance += amount;
+        printf("Deposited $%.2f. New balance: $%.2f\n", amount, account->balance);
+    } else {
+        printf("Deposit amount must be positive.\n");
+    }
+}
+
+void withdraw(BankAccount *account, float amount) {
+    if (amount > 0 && amount <= account->balance) {
+        account->balance -= amount;
+        printf("Withdrew $%.2f. New balance: $%.2f\n", amount, account->balance);
+    } else {
+        printf("Withdrawal amount must be positive and less than or equal to the balance.\n");
+    }
+}
+
+float check_balance(BankAccount *account) {
+    return account->balance;
+}
+
+int main() {
+    BankAccount accounts[NUM_ACCOUNTS] = {0}; // Initialize accounts with zero balance
+    int choice, account_num;
+    float amount;
+
+    while (1) {
+        printf("\n--- Menu ---\n");
+        printf("1. Deposit\n");
+        printf("2. Withdraw\n");
+        printf("3. Check Balance\n");
+        printf("4. Exit\n");
+        
+        printf("Choose an option (1-4): ");
+        scanf("%d", &choice);
+        
+        if (choice == 4) {
+            printf("Exiting the program. Goodbye!\n");
+            break;
+        }
+
+        printf("Select an account (1, 2, or 3): ");
+        scanf("%d", &account_num);
+        
+        if (account_num < 1 || account_num > NUM_ACCOUNTS) {
+            printf("Invalid account selection. Please choose 1, 2, or 3.\n");
+            continue;
+        }
+
+        BankAccount *account = &accounts[account_num - 1];
+
+        switch (choice) {
+            case 1: // Deposit
+                printf("Enter amount to deposit: ");
+                scanf("%f", &amount);
+                deposit(account, amount);
+                break;
+            case 2: // Withdraw
+                printf("Enter amount to withdraw: ");
+                scanf("%f", &amount);
+                withdraw(account, amount);
+                break;
+            case 3: // Check Balance
+                printf("Account %d balance: $%.2f\n", account_num, check_balance(account));
+                break;
+            default:
+                printf("Invalid choice. Please select a valid option.\n");
+        }
+    }
+
+    return 0;
+}
